@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31313.79
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SatDotNet.Interfaces", "Interfaces\SatDotNet.Interfaces.csproj", "{D435F7BB-AC25-4145-B1A5-CB81C307B195}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SatDotNet.FormulaEncoderDecoder", "FormulaEncoderDecoder\SatDotNet.FormulaEncoderDecoder.csproj", "{247EBE4A-E9C9-4BF6-8D40-DB5DD0952F8F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D435F7BB-AC25-4145-B1A5-CB81C307B195}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D435F7BB-AC25-4145-B1A5-CB81C307B195}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D435F7BB-AC25-4145-B1A5-CB81C307B195}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D435F7BB-AC25-4145-B1A5-CB81C307B195}.Release|Any CPU.Build.0 = Release|Any CPU
+		{247EBE4A-E9C9-4BF6-8D40-DB5DD0952F8F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{247EBE4A-E9C9-4BF6-8D40-DB5DD0952F8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{247EBE4A-E9C9-4BF6-8D40-DB5DD0952F8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{247EBE4A-E9C9-4BF6-8D40-DB5DD0952F8F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5E6D8822-E0A0-46FD-9DD9-4710BF114FC5}
+	EndGlobalSection
+EndGlobal
