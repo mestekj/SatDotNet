@@ -6,10 +6,16 @@ namespace SatDotNet.FormulaEncoderDecoder
 {
     class Variable : IVariable
     {
-        public Variable()
+        public Variable(string name)
         {
             NegativeLiteral = new Literal(this, false);
             PositiveLiteral = new Literal(this, true);
+            Name = name;
+        }
+
+        public Variable() : this(null)
+        {
+
         }
 
         public bool Equals(IVariable other)
@@ -20,6 +26,7 @@ namespace SatDotNet.FormulaEncoderDecoder
         public ILiteral NegativeLiteral { get; }
 
         public ILiteral PositiveLiteral { get; }
+        public string Name { get; }
     }
 
     class Literal : ILiteral

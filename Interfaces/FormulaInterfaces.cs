@@ -7,6 +7,7 @@ namespace SatDotNet.Interfaces
     {
         ILiteral PositiveLiteral { get; }
         ILiteral NegativeLiteral { get; }
+        String Name { get; }
     }
 
     public interface ILiteral : IEquatable<ILiteral>
