@@ -8,13 +8,16 @@ namespace SatDotNet.Formula2Cnf
 {
     class Formula2Cnf
     {
-        static Dictionary<string, string> ParseArgs(string[] args)
+        static Dictionary<string, string> ParseArgs(string[] args, string[] defaultKeys)
         {
             Dictionary<string, string> parsed = new Dictionary<string, string>();
 
             for (int i = 0; i < args.Length; i++)
             {
-                if(i+1 < args.Length && !args[i + 1].StartsWith("--"))
+                if (!args[i].StartsWith("--"))
+                    // value only -> use default key
+                    parsed.Add(defaultKeys[i], args[i]);
+                else if(i+1 < args.Length && !args[i + 1].StartsWith("--"))
                 {
                     // key-value
                     parsed.Add(args[i].Remove(0, 2), args[i + 1]);
@@ -29,24 +32,18 @@ namespace SatDotNet.Formula2Cnf
 
         static void Main(string[] args)
         {
-            var parsedArgs = ParseArgs(args);
+            var parsedArgs = ParseArgs(args, new string[] { "input", "output" });
 
             string input = null;
             TextWriter output = Console.Out;
 
             if(parsedArgs.TryGetValue("input", out string inputFile))
-            {
                 input = File.ReadAllText(inputFile);
-            }
             else
-            {
                 input = Console.ReadLine();
-            }
 
             if (parsedArgs.TryGetValue("output", out string outputFile))
-            {
                 output = File.CreateText(outputFile);
-            }
 
             var tseitinTranslator = new TseitinTranslator(parsedArgs.ContainsKey("equivalence"));
             ICnfFormula formula = tseitinTranslator.TranslateFormula(input, out IVariable rootVariable);
