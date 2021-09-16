@@ -68,19 +68,20 @@ namespace SatDotNet.FormulaEncoderDecoder
 
     public class DimacsReader
     {
-        Dictionary<int, Variable> variables;
+        Dictionary<int, Variable> variables = new();
         public ICnfFormula ReadFormula(string dimacsFormula)
         {
-            string[] lines = dimacsFormula.Split(Environment.NewLine);
+            string[] lines = dimacsFormula.Split('\n');
             int lineToProcess = 0;
 
             // skip comments
             while (lines[lineToProcess].StartsWith("c"))
                 lineToProcess++;
 
-            var headTokens = lines[lineToProcess].Split();
+            var headTokens = lines[lineToProcess].Split((char[])null, StringSplitOptions.RemoveEmptyEntries);
             int nvars = int.Parse(headTokens[2]);
             int nclauses = int.Parse(headTokens[3]);
+            lineToProcess++;
 
             GenerateVariables(nvars);
 
@@ -88,7 +89,7 @@ namespace SatDotNet.FormulaEncoderDecoder
 
             for (int i = 0; i < nclauses; i++)
             {
-                var tokens = lines[lineToProcess].Split();
+                var tokens = lines[lineToProcess].Split((char[])null, StringSplitOptions.RemoveEmptyEntries);
                 clauses.Add(ParseClause(tokens));
 
                 lineToProcess++;

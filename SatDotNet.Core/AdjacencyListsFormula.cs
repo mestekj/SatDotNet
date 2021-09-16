@@ -127,9 +127,12 @@ namespace SatDotNet.Core
             if (Literals.Contains(literal))
             {
                 // clause is satisfied by this literal
-                IsSatisfied = true;
-                satisfactionLevel = decisionLevel;
-                return;
+                if (!IsSatisfied)
+                {
+                    IsSatisfied = true;
+                    satisfactionLevel = decisionLevel;
+                    return;
+                }
             }
 
             var oppositeLiteral = literal.Negate();

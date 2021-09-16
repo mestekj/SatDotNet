@@ -35,7 +35,13 @@ namespace SatDotNet.Dpll
 
         static void Main(string[] args)
         {
-            var parsedArgs = ParseArgs(args, new string[] { "input", "output" });
+            var parsedArgs = ParseArgs(args, new string[] { "input" });
+
+            if(parsedArgs.TryGetValue("input-dir", out var dir))
+            {
+                ProcessDirectory(dir);
+                return;
+            }
 
             string input = null;
             bool inputIsDimacs;
@@ -82,7 +88,6 @@ namespace SatDotNet.Dpll
             var solvedFormula = solver.Solve(formula);
             stopWatch.Stop();
 
-
             if (solvedFormula.IsUnsatisfiable)
                 Console.WriteLine("UNSAT");
             else
@@ -91,16 +96,44 @@ namespace SatDotNet.Dpll
                 Console.WriteLine();
                 var literals =
                     solvedFormula.GetAssignment()
-                    .Where(l => l.Variable.Name != null)
-                    .OrderBy(l => l.Variable.Name)
-                    .Select(l => (l.IsPositive ? "" : "~ ") + l.Variable.Name);
+                    .Where(l => l.Variable.Name != null);
+
+                if (inputIsDimacs)
+                    literals = literals.OrderBy(l => int.Parse(l.Variable.Name));
+
+                var stringLiterals = literals.Select(l => (l.IsPositive ? "" : "-") + l.Variable.Name);
                 Console.WriteLine("Model:");
-                Console.WriteLine(String.Join(", ", literals));
+                Console.WriteLine(String.Join(", ", stringLiterals));
             }
 
             Console.WriteLine();
             Console.WriteLine("Solving statistics:");
-            Console.WriteLine($"Soving time: {stopWatch.Elapsed}, decisions: {solver.DecisionHeuristic.DecisionsCount}, unit propagation steps: {solvedFormula.UnitPropagationSteps}");
+            Console.WriteLine($"Solving time: {stopWatch.Elapsed}, decisions: {solver.DecisionHeuristic.DecisionsCount}, unit propagation steps: {solvedFormula.UnitPropagationSteps}");
+        }
+
+        private static void ProcessDirectory(string dir)
+        {
+            using (StreamWriter resultsFile = new StreamWriter(dir + Path.DirectorySeparatorChar + "results.csv"))
+            {
+                resultsFile.AutoFlush = true;
+                resultsFile.WriteLine("file,result,time,decisions,unit propagation steps");
+                foreach(string file in Directory.GetFiles(dir, "*.cnf"))
+                {
+                    Console.WriteLine(file);
+                    var input = File.ReadAllText(file);
+                    var dimacsReader = new DimacsReader();
+                    var formula = dimacsReader.ReadFormula(input);
+                    var solver = new Solver();
+                    var stopWatch = new Stopwatch();
+                    stopWatch.Start();
+                    var solvedFormula = solver.Solve(formula);
+                    stopWatch.Stop();
+                    string result = solvedFormula.IsUnsatisfiable ? "UNSAT" : "SAT";
+                    var pathTokens = file.Split(Path.DirectorySeparatorChar);
+                    resultsFile.WriteLine($"{pathTokens[pathTokens.Length-1]},{result},{stopWatch.Elapsed},{solver.DecisionHeuristic.DecisionsCount},{solvedFormula.UnitPropagationSteps}");
+                    
+                }
+            }
         }
     }
 }
