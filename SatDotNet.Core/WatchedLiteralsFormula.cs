@@ -58,7 +58,7 @@ namespace SatDotNet.Core
         } = false;
 
         public int UnitPropagationSteps { get; private set; } = 0;
-        public int CheckedClauses { get; private set; } = 0;
+        public long CheckedClauses { get; private set; } = 0;
 
         List<WatchedLiteralsClause> Clauses { get; set; }
 
@@ -229,6 +229,7 @@ namespace SatDotNet.Core
         {
             while(unitClauses.Count > 0)
             {
+                CheckedClauses++;
                 if (IsUnsatisfiable)
                 {
                     // solver will backtrack => no reason to perform unitProp

@@ -44,7 +44,7 @@ namespace SatDotNet.Core
 
         public ISet<BacktrackableClause> Clauses { get; }
 
-        public int CheckedClauses { get; private set; } = 0;
+        public  long CheckedClauses { get; private set; } = 0;
 
         IEnumerable<IClause> ICnfFormula.Clauses => Clauses.Where(c=> !c.IsUnsatisfiable && !c.IsSatisfied);
 
@@ -110,8 +110,12 @@ namespace SatDotNet.Core
         BacktrackableClause GetUnitClause()
         {
             foreach (var clause in Clauses)
+            {
+                CheckedClauses++;
                 if (!clause.IsSatisfied && !clause.IsUnsatisfiable && clause.Literals.Count == 1)
                     return clause;
+            }
+                
             return null;
         }
     }
