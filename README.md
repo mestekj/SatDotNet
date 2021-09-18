@@ -39,3 +39,8 @@ Speciální způsob spuštění programu je
 SatDotNet.Dpll --input-dir <dir>
 ```
 V tomto případě se solver postupně spustí na všechny soubory `*.cnf` v daném adresáři a výsledky zapíše do souboru `results.csv` tamtéž.
+
+## Úloha 3 - Watched Literals
+Úloha je řešena stejným programem jako úloha 2, tj. projektem `SatDotNet.Dpll`.
+
+Použití watched literals místo adjacency lists se zapne přidáním optionu `--watched-literals`.

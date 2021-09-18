@@ -15,18 +15,11 @@ namespace SatDotNet.Core
 
         /**
          * Solve formula.
-         * Returns null if UNSAT, else returns satisfying (partial) assignment
          */
-        public IPartialyAssignedFormula Solve(ICnfFormula formula)
+        public IPartialyAssignedFormula Solve(ICnfFormula formula, bool useWatchedLiterals=false)
         {
-            var bformula = new AdjacencyListsFormula(formula);
+            IBacktrackableFormula bformula = useWatchedLiterals ? new WatchedLiteralsFormula(formula) : new AdjacencyListsFormula(formula);
             Solve(bformula, 0);
-            /**
-            if (bformula.IsUnsatisfiable)
-                return null;
-            else
-                return bformula.GetAssignment();
-            */
             return bformula;
         }
 

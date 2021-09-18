@@ -31,6 +31,7 @@ namespace SatDotNet.Core
         bool IsSafisfied { get; }
         bool IsUnsatisfiable { get; }
         int UnitPropagationSteps { get; }
+        int CheckedClauses { get; }
         IEnumerable<ILiteral> GetAssignment();
     }
 

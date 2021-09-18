@@ -2,7 +2,7 @@
   "profiles": {
     "SatDotNet.Dpll": {
       "commandName": "Project",
-      "commandLineArgs": "D:\\Data\\dev\\SatDotNet\\benchmark\\uf50-01.cnf"
+      "commandLineArgs": "D:\\Data\\dev\\SatDotNet\\benchmark\\uf50-01.cnf  --watched-literals"
     }
   }
 }

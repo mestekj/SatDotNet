@@ -44,6 +44,8 @@ namespace SatDotNet.Core
 
         public ISet<BacktrackableClause> Clauses { get; }
 
+        public int CheckedClauses { get; private set; } = 0;
+
         IEnumerable<IClause> ICnfFormula.Clauses => Clauses.Where(c=> !c.IsUnsatisfiable && !c.IsSatisfied);
 
         public void Assign(ILiteral literal, int decisionLevel)
@@ -57,6 +59,7 @@ namespace SatDotNet.Core
 
             foreach (var clause in adjacencyLists[literal.Variable])
             {
+                CheckedClauses++;
                 clause.Assign(literal, decisionLevel);
                 if (clause.IsUnsatisfiable)
                 {
@@ -74,7 +77,10 @@ namespace SatDotNet.Core
                 assignedLiterals.Remove(dl, out var levelLiterals);
                 foreach (var literal in levelLiterals)
                     foreach (var clause in adjacencyLists[literal.Variable])
+                    {
                         clause.Backtrack(decisionLevel);
+                        CheckedClauses++;
+                    }
             }
 
             if(unsatisfiableLevel > decisionLevel)

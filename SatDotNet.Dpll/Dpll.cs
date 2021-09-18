@@ -39,7 +39,7 @@ namespace SatDotNet.Dpll
 
             if(parsedArgs.TryGetValue("input-dir", out var dir))
             {
-                ProcessDirectory(dir);
+                ProcessDirectory(dir, parsedArgs);
                 return;
             }
 
@@ -85,7 +85,7 @@ namespace SatDotNet.Dpll
 
             var stopWatch = new Stopwatch();
             stopWatch.Start();
-            var solvedFormula = solver.Solve(formula);
+            var solvedFormula = solver.Solve(formula, parsedArgs.ContainsKey("watched-literals"));
             stopWatch.Stop();
 
             if (solvedFormula.IsUnsatisfiable)
@@ -108,15 +108,15 @@ namespace SatDotNet.Dpll
 
             Console.WriteLine();
             Console.WriteLine("Solving statistics:");
-            Console.WriteLine($"Solving time: {stopWatch.Elapsed}, decisions: {solver.DecisionHeuristic.DecisionsCount}, unit propagation steps: {solvedFormula.UnitPropagationSteps}");
+            Console.WriteLine($"Solving time: {stopWatch.Elapsed}, decisions: {solver.DecisionHeuristic.DecisionsCount}, unit propagation steps: {solvedFormula.UnitPropagationSteps}, checked clauses: {solvedFormula.CheckedClauses}");
         }
 
-        private static void ProcessDirectory(string dir)
+        private static void ProcessDirectory(string dir, Dictionary<string, string> parsedArgs)
         {
             using (StreamWriter resultsFile = new StreamWriter(dir + Path.DirectorySeparatorChar + "results.csv"))
             {
                 resultsFile.AutoFlush = true;
-                resultsFile.WriteLine("file,result,time,decisions,unit propagation steps");
+                resultsFile.WriteLine("file,result,time,decisions,unit propagation steps, checked clauses");
                 foreach(string file in Directory.GetFiles(dir, "*.cnf"))
                 {
                     Console.WriteLine(file);
@@ -126,11 +126,11 @@ namespace SatDotNet.Dpll
                     var solver = new Solver();
                     var stopWatch = new Stopwatch();
                     stopWatch.Start();
-                    var solvedFormula = solver.Solve(formula);
+                    var solvedFormula = solver.Solve(formula, parsedArgs.ContainsKey("watched-literals"));
                     stopWatch.Stop();
                     string result = solvedFormula.IsUnsatisfiable ? "UNSAT" : "SAT";
                     var pathTokens = file.Split(Path.DirectorySeparatorChar);
-                    resultsFile.WriteLine($"{pathTokens[pathTokens.Length-1]},{result},{stopWatch.Elapsed},{solver.DecisionHeuristic.DecisionsCount},{solvedFormula.UnitPropagationSteps}");
+                    resultsFile.WriteLine($"{pathTokens[pathTokens.Length-1]},{result},{stopWatch.Elapsed},{solver.DecisionHeuristic.DecisionsCount},{solvedFormula.UnitPropagationSteps},{solvedFormula.CheckedClauses}");
                     
                 }
             }
